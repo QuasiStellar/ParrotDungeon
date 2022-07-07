@@ -67,8 +67,9 @@ public class CryptRoom extends SpecialRoom {
 			Painter.set( level, new Point( right-1, top+1 ), Terrain.STATUE );
 			cy = top + 2;
 		}
-		
-		level.drop( prize( level ), cx + cy * level.width() ).type = Heap.Type.TOMB;
+		Item prize = prize( level );
+		level.generatedItems.add(prize);
+		level.drop( prize, cx + cy * level.width() ).type = Heap.Type.TOMB;
 	}
 	
 	private static Item prize( Level level ) {

@@ -106,10 +106,15 @@ public class MagicalFireRoom extends SpecialRoom {
 				pos = level.pointToCell(behindFire.random(0));
 			} while (level.heaps.get(pos) != null);
 			if (honeyPot){
-				level.drop( new Honeypot(), pos);
+				Item pot = new Honeypot();
+				level.generatedItems.add(pot);
+				level.drop( pot, pos);
 				honeyPot = false;
-			} else
-				level.drop( prize( level ), pos );
+			} else {
+				Item prize = prize( level );
+				level.generatedItems.add(prize);
+				level.drop( prize, pos );
+			}
 		}
 
 		level.addItemToSpawn(new PotionOfFrost());

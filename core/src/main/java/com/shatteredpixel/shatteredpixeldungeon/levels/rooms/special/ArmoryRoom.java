@@ -61,7 +61,9 @@ public class ArmoryRoom extends SpecialRoom {
 			do {
 				pos = level.pointToCell(random());
 			} while (level.map[pos] != Terrain.EMPTY || level.heaps.get( pos ) != null);
-			level.drop( prize( level ), pos );
+			Item prize = prize( level );
+			level.generatedItems.add(prize);
+			level.drop( prize, pos );
 		}
 		
 		entrance.set( Door.Type.LOCKED );

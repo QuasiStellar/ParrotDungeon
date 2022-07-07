@@ -61,6 +61,9 @@ public class CrystalVaultRoom extends SpecialRoom {
 		i1 = prize();
 		i2 = prize();
 
+		level.generatedItems.add(i1);
+		level.generatedItems.add(i2);
+
 		int i1Pos, i2Pos;
 		int doorPos = level.pointToCell(entrance());
 		do {

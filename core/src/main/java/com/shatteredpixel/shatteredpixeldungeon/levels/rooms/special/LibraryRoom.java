@@ -56,6 +56,7 @@ public class LibraryRoom extends SpecialRoom {
 				item = Random.Int(2) == 0 ? new ScrollOfIdentify() : new ScrollOfRemoveCurse();
 			else
 				item = prize( level );
+			level.generatedItems.add(item);
 			level.drop( item, pos );
 		}
 		

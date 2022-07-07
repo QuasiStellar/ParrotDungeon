@@ -56,7 +56,9 @@ public class RunestoneRoom extends SpecialRoom {
 			do {
 				dropPos = level.pointToCell(random());
 			} while (level.map[dropPos] != Terrain.EMPTY || level.heaps.get( dropPos ) != null);
-			level.drop(prize(level), dropPos);
+			Item prize = prize( level );
+			level.generatedItems.add(prize);
+			level.drop(prize, dropPos);
 		}
 		
 		entrance().set( Door.Type.LOCKED );

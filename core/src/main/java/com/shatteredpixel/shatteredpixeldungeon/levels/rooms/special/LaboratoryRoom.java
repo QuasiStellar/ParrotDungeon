@@ -71,7 +71,9 @@ public class LaboratoryRoom extends SpecialRoom {
 		} while (
 				level.map[pos] != Terrain.EMPTY_SP ||
 						level.heaps.get( pos ) != null);
-		level.drop( new EnergyCrystal().random(), pos );
+		Item crystal = new EnergyCrystal().random();
+		level.generatedItems.add(crystal);
+		level.drop( crystal, pos );
 
 		int n = Random.NormalIntRange( 1, 2 );
 		for (int i=0; i < n; i++) {
@@ -80,7 +82,9 @@ public class LaboratoryRoom extends SpecialRoom {
 			} while (
 				level.map[pos] != Terrain.EMPTY_SP ||
 				level.heaps.get( pos ) != null);
-			level.drop( prize( level ), pos );
+			Item prize = prize( level );
+			level.generatedItems.add(prize);
+			level.drop( prize, pos );
 		}
 		
 		//guide pages

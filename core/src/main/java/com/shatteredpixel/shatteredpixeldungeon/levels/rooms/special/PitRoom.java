@@ -82,11 +82,14 @@ public class PitRoom extends SpecialRoom {
 					break;
 			}
 		} while ( mainLoot == null || Challenges.isItemBlocked(mainLoot));
+		level.generatedItems.add(mainLoot);
 		level.drop(mainLoot, remains).setHauntedIfCursed().type = Heap.Type.SKELETON;
 		
 		int n = Random.IntRange( 1, 2 );
 		for (int i=0; i < n; i++) {
-			level.drop( prize( level ), remains ).setHauntedIfCursed();
+			Item prize = prize( level );
+			level.generatedItems.add(prize);
+			level.drop( prize, remains ).setHauntedIfCursed();
 		}
 
 		level.drop( new CrystalKey( Dungeon.depth ), remains );

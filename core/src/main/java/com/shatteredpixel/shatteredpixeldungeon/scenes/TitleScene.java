@@ -23,11 +23,27 @@ package com.shatteredpixel.shatteredpixeldungeon.scenes;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Chrome;
+import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.GamesInProgress;
 import com.shatteredpixel.shatteredpixeldungeon.SPDSettings;
 import com.shatteredpixel.shatteredpixeldungeon.ShatteredPixelDungeon;
 import com.shatteredpixel.shatteredpixeldungeon.effects.BannerSprites;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Fireball;
+import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
+import com.shatteredpixel.shatteredpixeldungeon.items.Item;
+import com.shatteredpixel.shatteredpixeldungeon.items.armor.LeatherArmor;
+import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.EtherealChains;
+import com.shatteredpixel.shatteredpixeldungeon.items.potions.Potion;
+import com.shatteredpixel.shatteredpixeldungeon.items.rings.Ring;
+import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.Scroll;
+import com.shatteredpixel.shatteredpixeldungeon.items.wands.Wand;
+import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfCorrosion;
+import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfDisintegration;
+import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfFireblast;
+import com.shatteredpixel.shatteredpixeldungeon.levels.Level;
+import com.shatteredpixel.shatteredpixeldungeon.levels.SewerLevel;
+import com.shatteredpixel.shatteredpixeldungeon.levels.rooms.secret.SecretRoom;
+import com.shatteredpixel.shatteredpixeldungeon.levels.rooms.special.SpecialRoom;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Languages;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.services.news.News;
@@ -39,6 +55,7 @@ import com.shatteredpixel.shatteredpixeldungeon.ui.ExitButton;
 import com.shatteredpixel.shatteredpixeldungeon.ui.Icons;
 import com.shatteredpixel.shatteredpixeldungeon.ui.StyledButton;
 import com.shatteredpixel.shatteredpixeldungeon.ui.Window;
+import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.shatteredpixel.shatteredpixeldungeon.windows.WndOptions;
 import com.shatteredpixel.shatteredpixeldungeon.windows.WndSettings;
 import com.watabou.glwrap.Blending;
@@ -49,6 +66,7 @@ import com.watabou.noosa.Image;
 import com.watabou.noosa.audio.Music;
 import com.watabou.utils.ColorMath;
 import com.watabou.utils.DeviceCompat;
+import com.watabou.utils.Random;
 
 import java.util.Date;
 
@@ -169,6 +187,69 @@ public class TitleScene extends PixelScene {
 		StyledButton btnAbout = new StyledButton(GREY_TR, Messages.get(this, "about")){
 			@Override
 			protected void onClick() {
+
+				long start = System.currentTimeMillis();
+
+				for (int i = 0; i < 3; i++) {
+
+					if (i % 100000 == 0) GLog.i(i + "");
+
+					Dungeon.seed = i;
+					Dungeon.depth = 1;
+
+					Random.pushGenerator( Dungeon.seed + 1 );
+
+						Scroll.initLabels();
+						Potion.initColors();
+						Ring.initGems();
+
+						SpecialRoom.initForRun();
+						SecretRoom.initForRun();
+
+						Generator.fullReset();
+
+					Random.resetGenerators();
+
+					Level level = new SewerLevel();
+					level.testCreate();
+
+					boolean wand = false;
+					String wandName = "";
+					boolean ring = false;
+					boolean armor = false;
+					boolean artifact = false;
+
+					for (Item item :
+							level.generatedItems) {
+						GLog.i(i + " - " + item.name());
+						if ((item instanceof WandOfCorrosion ||
+								item instanceof WandOfDisintegration ||
+								item instanceof WandOfFireblast) &&
+								((Wand)item).level() == 2) {
+							wand = true;
+							wandName = item.name();
+//							GLog.i(i + " - " + item.name());
+						}
+						if (item instanceof LeatherArmor && ((LeatherArmor)item).level() == 3) {
+							armor = true;
+						}
+						if (item instanceof EtherealChains) {
+							artifact = true;
+						}
+//						if (item instanceof Ring && ((Ring)item).level() == 2) {
+//							ring = true;
+//						}
+					}
+
+					level = null;
+
+					if (wand && armor && artifact) {
+						GLog.i(i + " - " + wandName);
+					}
+				}
+
+				GLog.i(System.currentTimeMillis() - start + "");
+
 				ShatteredPixelDungeon.switchScene( AboutScene.class );
 			}
 		};

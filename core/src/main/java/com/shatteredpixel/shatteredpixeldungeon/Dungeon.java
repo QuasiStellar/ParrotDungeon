@@ -478,6 +478,11 @@ public class Dungeon {
 		else return false;
 
 	}
+
+	public static boolean testPosNeeded() {
+		return Random.Int(2) == 0;
+
+	}
 	
 	public static boolean souNeeded() {
 		int souLeftThisSet;
@@ -493,6 +498,10 @@ public class Dungeon {
 		//chance is floors left / scrolls left
 		return Random.Int(5 - floorThisSet) < souLeftThisSet;
 	}
+
+	public static boolean testSouNeeded() {
+		return Random.Int(4) < 3;
+	}
 	
 	public static boolean asNeeded() {
 		//1 AS each floor set
@@ -502,6 +511,10 @@ public class Dungeon {
 		int floorThisSet = (depth % 5);
 		//chance is floors left / scrolls left
 		return Random.Int(5 - floorThisSet) < asLeftThisSet;
+	}
+
+	public static boolean testAsNeeded() {
+		return Random.Int(4) < 1;
 	}
 
 	private static final String INIT_VER	= "init_ver";

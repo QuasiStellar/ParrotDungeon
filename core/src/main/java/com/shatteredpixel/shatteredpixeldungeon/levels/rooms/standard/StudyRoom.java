@@ -81,11 +81,14 @@ public class StudyRoom extends StandardRoom {
 		Item prize = (Random.Int(2) == 0) ? level.findPrizeItem() : null;
 		
 		if (prize != null) {
+			level.generatedItems.add(prize);
 			level.drop(prize, (center.x + center.y * level.width()));
 		} else {
-			level.drop(Generator.random( Random.oneOf(
+			Item extra = Generator.random( Random.oneOf(
 					Generator.Category.POTION,
-					Generator.Category.SCROLL)), (center.x + center.y * level.width()));
+					Generator.Category.SCROLL));
+			level.generatedItems.add(extra);
+			level.drop(extra, (center.x + center.y * level.width()));
 		}
 	}
 }

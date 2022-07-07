@@ -46,10 +46,14 @@ public class StorageRoom extends SpecialRoom {
 				pos = level.pointToCell(random());
 			} while (level.map[pos] != Terrain.EMPTY_SP || level.heaps.get(pos) != null);
 			if (honeyPot){
-				level.drop( new Honeypot(), pos);
+				Item pot = new Honeypot();
+				level.generatedItems.add(pot);
+				level.drop( pot, pos);
 				honeyPot = false;
 			} else {
-				level.drop( prize(level), pos);
+				Item prize = prize( level );
+				level.generatedItems.add(prize);
+				level.drop( prize, pos);
 			}
 		}
 		

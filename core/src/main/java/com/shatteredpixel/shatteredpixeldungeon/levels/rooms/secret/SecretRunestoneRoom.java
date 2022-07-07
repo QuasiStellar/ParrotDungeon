@@ -22,6 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.levels.rooms.secret;
 
 import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
+import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfLiquidFlame;
 import com.shatteredpixel.shatteredpixeldungeon.items.stones.StoneOfEnchantment;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Level;
@@ -68,17 +69,23 @@ public class SecretRunestoneRoom extends SecretRoom {
 		do{
 			dropPos = level.pointToCell(random());
 		} while (level.map[dropPos] != Terrain.EMPTY);
-		level.drop( Generator.random(Generator.Category.STONE), dropPos);
+		Item prize1 = Generator.random(Generator.Category.STONE);
+		level.generatedItems.add(prize1);
+		level.drop( prize1, dropPos);
 		
 		do{
 			dropPos = level.pointToCell(random());
 		} while (level.map[dropPos] != Terrain.EMPTY || level.heaps.get(dropPos) != null);
-		level.drop( Generator.random(Generator.Category.STONE), dropPos);
+		Item prize2 = Generator.random(Generator.Category.STONE);
+		level.generatedItems.add(prize2);
+		level.drop( prize2, dropPos);
 		
 		do{
 			dropPos = level.pointToCell(random());
 		} while (level.map[dropPos] != Terrain.EMPTY_SP);
-		level.drop( new StoneOfEnchantment(), dropPos);
+		Item prize3 = new StoneOfEnchantment();
+		level.generatedItems.add(prize3);
+		level.drop( prize3, dropPos);
 		
 		entrance.set(Door.Type.HIDDEN);
 	}

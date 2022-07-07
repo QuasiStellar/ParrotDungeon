@@ -162,7 +162,9 @@ public class SentryRoom extends SpecialRoom {
 		level.mobs.add( sentry );
 
 		Painter.set(level, treasurePos, Terrain.PEDESTAL);
-		level.drop( prize( level ), level.pointToCell(treasurePos) ).type = Heap.Type.CHEST;
+		Item prize = prize( level );
+		level.generatedItems.add(prize);
+		level.drop( prize, level.pointToCell(treasurePos) ).type = Heap.Type.CHEST;
 
 		level.addItemToSpawn(new PotionOfHaste());
 

@@ -24,6 +24,8 @@ package com.shatteredpixel.shatteredpixeldungeon.levels.rooms.secret;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
 import com.shatteredpixel.shatteredpixeldungeon.items.Heap;
+import com.shatteredpixel.shatteredpixeldungeon.items.Item;
+import com.shatteredpixel.shatteredpixeldungeon.items.bombs.Bomb;
 import com.shatteredpixel.shatteredpixeldungeon.items.keys.GoldenKey;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfLevitation;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Level;
@@ -64,22 +66,30 @@ public class SecretChestChasmRoom extends SecretRoom {
 		
 		Point p = new Point(left+3, top+3);
 		Painter.set(level, p, Terrain.EMPTY_SP);
-		level.drop(Generator.random(), level.pointToCell(p)).type = Heap.Type.LOCKED_CHEST;
+		Item prize1 = Generator.random();
+		level.generatedItems.add(prize1);
+		level.drop(prize1, level.pointToCell(p)).type = Heap.Type.LOCKED_CHEST;
 		if (level.heaps.get(level.pointToCell(p)) != null) chests++;
 		
 		p.x = right-3;
 		Painter.set(level, p, Terrain.EMPTY_SP);
-		level.drop(Generator.random(), level.pointToCell(p)).type = Heap.Type.LOCKED_CHEST;
+		Item prize2 = Generator.random();
+		level.generatedItems.add(prize2);
+		level.drop(prize2, level.pointToCell(p)).type = Heap.Type.LOCKED_CHEST;
 		if (level.heaps.get(level.pointToCell(p)) != null) chests++;
 		
 		p.y = bottom-3;
 		Painter.set(level, p, Terrain.EMPTY_SP);
-		level.drop(Generator.random(), level.pointToCell(p)).type = Heap.Type.LOCKED_CHEST;
+		Item prize3 = Generator.random();
+		level.generatedItems.add(prize3);
+		level.drop(prize3, level.pointToCell(p)).type = Heap.Type.LOCKED_CHEST;
 		if (level.heaps.get(level.pointToCell(p)) != null) chests++;
 		
 		p.x = left+3;
 		Painter.set(level, p, Terrain.EMPTY_SP);
-		level.drop(Generator.random(), level.pointToCell(p)).type = Heap.Type.LOCKED_CHEST;
+		Item prize4 = Generator.random();
+		level.generatedItems.add(prize4);
+		level.drop(prize4, level.pointToCell(p)).type = Heap.Type.LOCKED_CHEST;
 		if (level.heaps.get(level.pointToCell(p)) != null) chests++;
 		
 		p = new Point(left+1, top+1);

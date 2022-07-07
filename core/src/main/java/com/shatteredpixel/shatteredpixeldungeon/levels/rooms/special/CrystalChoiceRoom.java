@@ -117,6 +117,7 @@ public class CrystalChoiceRoom extends SpecialRoom {
 					pos = level.pointToCell(room1.random(0));
 				}
 			} while (level.heaps.get(pos) != null);
+			level.generatedItems.add(reward);
 			level.drop(reward, pos);
 		}
 

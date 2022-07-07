@@ -337,6 +337,8 @@ public abstract class RegularLevel extends Level {
 			Item toDrop = Generator.random();
 			if (toDrop == null) continue;
 
+			generatedItems.add(toDrop);
+
 			int cell = randomDropCell();
 			if (map[cell] == Terrain.HIGH_GRASS || map[cell] == Terrain.FURROWED_GRASS) {
 				map[cell] = Terrain.GRASS;
@@ -397,92 +399,92 @@ public abstract class RegularLevel extends Level {
 			}
 		}
 
-		//use a separate generator for this to prevent held items, meta progress, and talents from affecting levelgen
-		//we can use a random long for the seed as it will be the same long every time
-		Random.pushGenerator( Random.Long() );
+//		//use a separate generator for this to prevent held items, meta progress, and talents from affecting levelgen
+//		//we can use a random long for the seed as it will be the same long every time
+//		Random.pushGenerator( Random.Long() );
+//
+//		Item item = Bones.get();
+//		if (item != null) {
+//			int cell = randomDropCell();
+//			if (map[cell] == Terrain.HIGH_GRASS || map[cell] == Terrain.FURROWED_GRASS) {
+//				map[cell] = Terrain.GRASS;
+//				losBlocking[cell] = false;
+//			}
+//			drop( item, cell ).setHauntedIfCursed().type = Heap.Type.REMAINS;
+//		}
 
-		Item item = Bones.get();
-		if (item != null) {
-			int cell = randomDropCell();
-			if (map[cell] == Terrain.HIGH_GRASS || map[cell] == Terrain.FURROWED_GRASS) {
-				map[cell] = Terrain.GRASS;
-				losBlocking[cell] = false;
-			}
-			drop( item, cell ).setHauntedIfCursed().type = Heap.Type.REMAINS;
-		}
-
-		DriedRose rose = Dungeon.hero.belongings.getItem( DriedRose.class );
-		if (rose != null && rose.isIdentified() && !rose.cursed){
-			//aim to drop 1 petal every 2 floors
-			int petalsNeeded = (int) Math.ceil((float)((Dungeon.depth / 2) - rose.droppedPetals) / 3);
-
-			for (int i=1; i <= petalsNeeded; i++) {
-				//the player may miss a single petal and still max their rose.
-				if (rose.droppedPetals < 11) {
-					item = new DriedRose.Petal();
-					int cell = randomDropCell();
-					drop( item, cell ).type = Heap.Type.HEAP;
-					if (map[cell] == Terrain.HIGH_GRASS || map[cell] == Terrain.FURROWED_GRASS) {
-						map[cell] = Terrain.GRASS;
-						losBlocking[cell] = false;
-					}
-					rose.droppedPetals++;
-				}
-			}
-		}
+//		DriedRose rose = Dungeon.hero.belongings.getItem( DriedRose.class );
+//		if (rose != null && rose.isIdentified() && !rose.cursed){
+//			//aim to drop 1 petal every 2 floors
+//			int petalsNeeded = (int) Math.ceil((float)((Dungeon.depth / 2) - rose.droppedPetals) / 3);
+//
+//			for (int i=1; i <= petalsNeeded; i++) {
+//				//the player may miss a single petal and still max their rose.
+//				if (rose.droppedPetals < 11) {
+//					item = new DriedRose.Petal();
+//					int cell = randomDropCell();
+//					drop( item, cell ).type = Heap.Type.HEAP;
+//					if (map[cell] == Terrain.HIGH_GRASS || map[cell] == Terrain.FURROWED_GRASS) {
+//						map[cell] = Terrain.GRASS;
+//						losBlocking[cell] = false;
+//					}
+//					rose.droppedPetals++;
+//				}
+//			}
+//		}
 
 		//cached rations try to drop in a special room on floors 2/3/4/6/7/8, to a max of 4/6
-		if (Dungeon.hero.hasTalent(Talent.CACHED_RATIONS)){
-			Talent.CachedRationsDropped dropped = Buff.affect(Dungeon.hero, Talent.CachedRationsDropped.class);
-			if (dropped.count() < 2 + 2*Dungeon.hero.pointsInTalent(Talent.CACHED_RATIONS)){
-				int cell;
-				int tries = 100;
-				boolean valid;
-				do {
-					cell = randomDropCell(SpecialRoom.class);
-					valid = cell != -1 && !(room(cell) instanceof SecretRoom)
-							&& !(room(cell) instanceof ShopRoom)
-							&& map[cell] != Terrain.EMPTY_SP
-							&& map[cell] != Terrain.WATER
-							&& map[cell] != Terrain.PEDESTAL;
- 				} while (tries-- > 0 && !valid);
-				if (valid) {
-					if (map[cell] == Terrain.HIGH_GRASS || map[cell] == Terrain.FURROWED_GRASS) {
-						map[cell] = Terrain.GRASS;
-						losBlocking[cell] = false;
-					}
-					drop(new SmallRation(), cell).type = Heap.Type.CHEST;
-					dropped.countUp(1);
-				}
-			}
-		}
+//		if (Dungeon.hero.hasTalent(Talent.CACHED_RATIONS)){
+//			Talent.CachedRationsDropped dropped = Buff.affect(Dungeon.hero, Talent.CachedRationsDropped.class);
+//			if (dropped.count() < 2 + 2*Dungeon.hero.pointsInTalent(Talent.CACHED_RATIONS)){
+//				int cell;
+//				int tries = 100;
+//				boolean valid;
+//				do {
+//					cell = randomDropCell(SpecialRoom.class);
+//					valid = cell != -1 && !(room(cell) instanceof SecretRoom)
+//							&& !(room(cell) instanceof ShopRoom)
+//							&& map[cell] != Terrain.EMPTY_SP
+//							&& map[cell] != Terrain.WATER
+//							&& map[cell] != Terrain.PEDESTAL;
+// 				} while (tries-- > 0 && !valid);
+//				if (valid) {
+//					if (map[cell] == Terrain.HIGH_GRASS || map[cell] == Terrain.FURROWED_GRASS) {
+//						map[cell] = Terrain.GRASS;
+//						losBlocking[cell] = false;
+//					}
+//					drop(new SmallRation(), cell).type = Heap.Type.CHEST;
+//					dropped.countUp(1);
+//				}
+//			}
+//		}
 
-		//guide pages
-		Collection<String> allPages = Document.ADVENTURERS_GUIDE.pageNames();
-		ArrayList<String> missingPages = new ArrayList<>();
-		for ( String page : allPages){
-			if (!Document.ADVENTURERS_GUIDE.isPageFound(page)){
-				missingPages.add(page);
-			}
-		}
-
-		//a total of 6 pages drop randomly, the rest are specially dropped or are given at the start
-		missingPages.remove(Document.GUIDE_SEARCHING);
-
-		//chance to find a page is 0/25/50/75/100% for floors 1/2/3/4/5+
-		float dropChance = 0.25f*(Dungeon.depth-1);
-		if (!missingPages.isEmpty() && Random.Float() < dropChance){
-			GuidePage p = new GuidePage();
-			p.page(missingPages.get(0));
-			int cell = randomDropCell();
-			if (map[cell] == Terrain.HIGH_GRASS || map[cell] == Terrain.FURROWED_GRASS) {
-				map[cell] = Terrain.GRASS;
-				losBlocking[cell] = false;
-			}
-			drop( p, cell );
-		}
-
-		Random.popGenerator();
+//		//guide pages
+//		Collection<String> allPages = Document.ADVENTURERS_GUIDE.pageNames();
+//		ArrayList<String> missingPages = new ArrayList<>();
+//		for ( String page : allPages){
+//			if (!Document.ADVENTURERS_GUIDE.isPageFound(page)){
+//				missingPages.add(page);
+//			}
+//		}
+//
+//		//a total of 6 pages drop randomly, the rest are specially dropped or are given at the start
+//		missingPages.remove(Document.GUIDE_SEARCHING);
+//
+//		//chance to find a page is 0/25/50/75/100% for floors 1/2/3/4/5+
+//		float dropChance = 0.25f*(Dungeon.depth-1);
+//		if (!missingPages.isEmpty() && Random.Float() < dropChance){
+//			GuidePage p = new GuidePage();
+//			p.page(missingPages.get(0));
+//			int cell = randomDropCell();
+//			if (map[cell] == Terrain.HIGH_GRASS || map[cell] == Terrain.FURROWED_GRASS) {
+//				map[cell] = Terrain.GRASS;
+//				losBlocking[cell] = false;
+//			}
+//			drop( p, cell );
+//		}
+//
+//		Random.popGenerator();
 
 	}
 	

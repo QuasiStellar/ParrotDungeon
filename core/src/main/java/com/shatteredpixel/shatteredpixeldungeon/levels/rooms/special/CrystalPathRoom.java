@@ -147,6 +147,7 @@ public class CrystalPathRoom extends SpecialRoom {
 					}
 					break;
 			}
+			level.generatedItems.add(item);
 			level.drop(item, pos);
 			if (clockwise){
 				idx++;

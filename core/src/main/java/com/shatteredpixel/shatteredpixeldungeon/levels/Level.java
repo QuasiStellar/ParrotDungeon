@@ -158,7 +158,8 @@ public abstract class Level implements Bundlable {
 	public HashSet<CustomTilemap> customTiles;
 	public HashSet<CustomTilemap> customWalls;
 	
-	protected ArrayList<Item> itemsToSpawn = new ArrayList<>();
+	public ArrayList<Item> itemsToSpawn = new ArrayList<>();
+	public ArrayList<Item> generatedItems = new ArrayList<>();
 
 	protected Group visuals;
 	
@@ -272,6 +273,56 @@ public abstract class Level implements Bundlable {
 		cleanWalls();
 		
 		createMobs();
+		createItems();
+
+		Random.popGenerator();
+	}
+
+	public void testCreate() {
+		Random.pushGenerator( Dungeon.seedForDepth(1, 0) );
+
+		addItemToSpawn(Generator.random(Generator.Category.FOOD));
+
+		if (Dungeon.testPosNeeded()) {
+			addItemToSpawn( new PotionOfStrength() );
+			Dungeon.LimitedDrops.STRENGTH_POTIONS.count++;
+		}
+		if (Dungeon.testSouNeeded()) {
+			addItemToSpawn( new ScrollOfUpgrade() );
+			Dungeon.LimitedDrops.UPGRADE_SCROLLS.count++;
+		}
+		if (Dungeon.testAsNeeded()) {
+			addItemToSpawn( new Stylus() );
+			Dungeon.LimitedDrops.ARCANE_STYLI.count++;
+		}
+		int enchChapter = (int)((Dungeon.seed / 10) % 3) + 1;
+		if ( 0 == enchChapter && Dungeon.seed % 4 + 1 == 1) {
+			addItemToSpawn( new StoneOfEnchantment() );
+		}
+
+		if ( 1 == ((Dungeon.seed % 3) + 1)){
+			addItemToSpawn( new StoneOfIntuition() );
+		}
+
+		do {
+			width = height = length = 0;
+
+			transitions = new ArrayList<>();
+
+			mobs = new HashSet<>();
+			heaps = new SparseArray<>();
+			blobs = new HashMap<>();
+			plants = new SparseArray<>();
+			traps = new SparseArray<>();
+			customTiles = new HashSet<>();
+			customWalls = new HashSet<>();
+
+		} while (!build());
+
+//		buildFlagMaps();
+//		cleanWalls();
+
+//		createMobs();
 		createItems();
 
 		Random.popGenerator();

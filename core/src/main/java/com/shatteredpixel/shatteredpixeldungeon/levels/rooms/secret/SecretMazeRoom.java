@@ -108,7 +108,8 @@ public class SecretMazeRoom extends SecretRoom {
 		if (Random.Int(3) == 0){
 			prize.upgrade();
 		}
-		
+
+		level.generatedItems.add(prize);
 		level.drop(prize, level.pointToCell(bestDistP)).type = Heap.Type.CHEST;
 		
 		PathFinder.setMapSize(level.width(), level.height());
